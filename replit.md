@@ -28,6 +28,34 @@ gds/           - Physical layout files
 Makefile       - Build and simulation orchestration
 ```
 
+## Frontend
+
+A React + Vite web app at `frontend/` provides an interactive visual interface:
+
+- **/** — Landing page with animated chip graphic and "Start Simulation" CTA
+- **/architecture** — GPU Component Hierarchy + ISA instruction table (fetches from `/api/architecture`)
+- **/simulate** — Simulation Control Center: run matrix add/multiply kernels, watch cycle counter update live, see core states and logs (polls `/api/simulate/status`)
+- **/memory** — Memory Hierarchy diagram: Registers → Shared Memory/L1 → L2 Cache → Global Memory → System Memory with latency/bandwidth specs (fetches from `/api/memory-hierarchy`)
+
+**Frontend tech:** React 19, React Router v7, Vite 8, Tailwind CSS 4 (@tailwindcss/vite), framer-motion, lucide-react, Space Grotesk + JetBrains Mono fonts
+
+## Backend API
+
+A Flask server at `server.py` exposes:
+- `GET /api/architecture` — GPU component tree + ISA table
+- `GET /api/memory-hierarchy` — Memory levels with latency/bandwidth
+- `POST /api/simulate/matadd` — Start matrix addition simulation (runs in a background thread)
+- `POST /api/simulate/matmul` — Start matrix multiplication simulation
+- `GET /api/simulate/status` — Current simulation state (running, cycles, log lines, passed/failed)
+
+The backend actually invokes the cocotb/iverilog simulation tools.
+
+## Workflows
+
+- **Start application** — Vite dev server on port 5000 (webview)
+- **Backend API** — Flask API on localhost:8000 (console)
+- **Run Simulation** — Runs both simulations sequentially via Makefile (console)
+
 ## Running Simulations
 
 The "Run Simulation" workflow runs both GPU simulations (matrix addition and multiplication).

@@ -11,3 +11,7 @@ results.xml
 .pythonlibs/
 pyproject.toml
 uv.lock
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
